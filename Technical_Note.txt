@@ -1,0 +1,65 @@
+
+---
+
+# Technical Note (1–2 pages)
+Create a file `Technical_Note.md` or include this text in your repo (I include it below — copy into `Technical_Note.md`):
+
+```markdown
+# Technical Note — Math-Adaptive-Prototype
+
+## Overview
+This project implements a compact rule-based adaptive learning prototype for early elementary math practice. The system generates arithmetic puzzles across three difficulty tiers (easy, medium, hard), logs learner performance (correctness and response time), and adapts difficulty using simple human-readable rules. The focus is on demonstrating adaptive behavior rather than building a polished UI.
+
+## Architecture / Flow
+1. **main.py** — CLI entry point. Handles user interaction, session loop, logging, and summary.
+2. **puzzle_generator.py** — Generates questions per difficulty:
+   - Easy: single-digit addition/subtraction
+   - Medium: 2-digit arithmetic, basic multiplication
+   - Hard: larger sums, multiplication, integer division
+3. **tracker.py** — Keeps in-memory attempt logs. Provides summary stats (accuracy, average time) and recent attempts.
+4. **adaptive_engine.py** — Contains the decision logic that selects the next level based on recent attempts.
+
+
+## Adaptive Logic (rule-based)
+Decision window: last 3 attempts.
+
+Rules:
+- **Promote**: If at least 2 of the last 3 attempts are correct and average time ≤ threshold for current level → increase difficulty by one level.
+- **Demote**: If at most 1 of the last 3 attempts is correct → decrease difficulty by one level.
+- **Hold**: Otherwise, keep same level.
+
+Time thresholds (heuristic):
+- easy: 8s, medium: 12s, hard: 20s
+
+Rationale: Combining accuracy and response time keeps the experience in the learner's "optimal challenge zone". Quick correct answers indicate readiness to progress; slow or incorrect responses indicate the need for consolidation.
+
+## Metrics tracked
+- Per-question: correctness (boolean), time taken (seconds), level, user answer
+- Session-level: total questions, correct count, accuracy percentage, average time
+
+These metrics can be exported as CSV for later analysis or to train a future ML model.
+
+## Why rule-based?
+- Transparent and easy to explain during evaluation
+- No need for labeled historical data
+- Quick to implement and tweak for classroom trials
+- For a small prototype and assignment, this is the most practical choice
+
+## How to collect data & scale
+- Store session logs centrally (CSV/DB). Collect many sessions to get realistic response-time distributions and error patterns.
+- Add fields: learner age, prior exposure, timestamp, question id.
+- For ML upgrade: use logged data to train a classifier (next-level prediction) or a bandit-style recommender.
+
+## Handling noisy/inconsistent performance
+- Increase decision window to 5–7 attempts to smooth noise
+- Use rolling averages and ignore very large latencies (timeouts)
+- Optionally use an EWMA (exponentially weighted moving average) for time and accuracy
+
+## Extending beyond math
+- Replace puzzle generator logic with domain-specific item generators
+- Keep the same adaptive engine; tune thresholds and features (e.g., hint requests, partial credit)
+
+## Quick notes for graders
+- `adaptive_engine.py` contains all rules, easy to inspect
+- Heuristics can be tweaked quickly for experiments
+- All code uses Python standard library for reproducibility
