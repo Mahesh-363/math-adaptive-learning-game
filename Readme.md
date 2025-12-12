@@ -28,7 +28,7 @@ This project focuses on the core idea of adaptive learning:
 
 ## 🧩 Project Structure
 
-math-adaptive-prototype
+math-adoptive-learning-game
 ├── README.md
 ├── Technical_Note.md
 ├── requirements.txt
