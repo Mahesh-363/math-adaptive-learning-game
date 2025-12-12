@@ -51,7 +51,8 @@ Make sure you have **Python 3.8+** installed.
 ### 2. Clone or download the repository
 
 ### bash 
-git clone https://github.com/yourusername/math-adaptive-learning-game && cd math-adaptive-prototype
+git clone https://github.com/yourusername/math-adoptive-learning-game
+cd math-adoptive-learning-game
 python src/main.py
 
 Follow the on-screen instructions to start practicing.
